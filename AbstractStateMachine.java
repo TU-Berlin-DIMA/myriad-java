@@ -27,6 +27,7 @@ public abstract class AbstractStateMachine{
     /* Pseudorandom number generator instance for transition probabilities */
     private PRNG prng;
     
+    private double EPS = Double.MIN_VALUE*100;
 
     public enum State{
         
@@ -99,6 +100,11 @@ public abstract class AbstractStateMachine{
         this.isFinal = isFinal;
     }
     
+    // Return start state
+    public State getStart(){
+        return this.start;
+    }
+    
     // collect all distinct states of machine
     public Set<State> getStates(){
         Set<State> S = new Set<State>();
@@ -118,13 +124,42 @@ public abstract class AbstractStateMachine{
     
     // normalize transition probs
     public boolean normalizeDelta(){
+        Boolean touched = false;
         State curr = this.start;
         if (this.curr = null) return true;
-        // 
+        Set<State> states = getStates();
+        for (State state : states){
+            double deltaCum = 0;
+            for (double delta : state.trans.getValues())
+                deltaCum += delta;
+            if (deltaCum < 1-this.EPS || deltaCum > 1+EPS){
+                for (Map.Entry<State, Transition> succ : state.trans.entrySet()){
+                    trans.put(succ.getKey(), new Transition(succ.getValue().delta/deltaCum, succ.getValue().output));
+                }
+                touched = true;
+            }
+        }
+        return touched;
     }
         
-    // check for sanity: state duplicates, transition probs sum up to one
-    public boolean checkSanity(){}
+    // check for sanity: state duplicates, normalized transition probs
+    public boolean checkSanity(){
+        // TODO: check for duplicates pred(A) != pred(A') => duplicated enum State
+        
+        // check for normalized transition probs
+        State curr = this.start;
+        if (this.curr = null) return true;
+        Set<State> states = getStates();
+        for (State state : states){
+            double deltaCum = 0;
+            for (double delta : state.trans.getValues())
+                deltaCum += delta;
+            if (deltaCum < 1-this.EPS || deltaCum > 1+EPS){
+                return false;
+            }
+        }
+    
+    }
     
     /* Initialize model from its textual representation */
     private void initMachine(String path) throws FileNotFoundException;
