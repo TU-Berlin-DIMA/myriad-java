@@ -28,15 +28,16 @@ public abstract class PRNG{
     /*
     * Very large or maximum value (period) that can be generated.
     */
-    private int OFFSET_SUBSTREAM;
+    private long OFFSET_SUBSTREAM;
     
     /*
-    * Position pointer in chunk of current node.
+    * Position polonger in chunk of current node.
     */
-    private int pos;
+    private long pos;
     
     public PRNG(MyriadNode m){
         this.m = m;
+        this.OFFSET_SUBSTREAM = 0;
         init();
     }
     
@@ -49,10 +50,13 @@ public abstract class PRNG{
     /* 
     * Return random number in assigned substream at given position. 
     */
-    public int at(int pos){
-        return atOffset(pos + OFFSET_SUBSTREAM);
+    public long at(long pos){
+        return compute(pos + OFFSET_SUBSTREAM);
     }
     
-    private int atOffset(int pos);
+    /*
+    * Implementation of the random number generation function.
+    */
+    private long compute(long pos);
     
 }
