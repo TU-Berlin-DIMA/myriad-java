@@ -17,64 +17,37 @@
 */
 
 
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 public class Myriad{
 
-   private const int baseSize = 1000;
-   private int scale = 1;
-   private PRNG prng;
-    
+    // TODO:
+    private final int baseSize = 1000;
+    private int scale = 1;
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws FileNotFoundException {
 
         // parse input arguments
-        if (args.length < 3 || args.length > 4){
-            System.out.println("Usage: javac Myriad <nID> <N> <sf> [<seed>]");
+        if (args.length < 4 || args.length > 5){
+            // spec_src = Scala or XML data description
+            System.out.println("Usage: javac Myriad <spec_src> <nID> <N> <sf> [<seed>]");
             return;
         }
         
-        int seed = args.length == 3 ? Random().nextInt() : Integer.parsInt(args[4]);
+        int seed = args.length == 4 ? new Random().nextInt() : Integer.parseInt(args[4]);
+
+        // 1. Receive data generation description (scala class or XML speck)
+        Generator plan = new Generator(args[0]);
+
+        // 2. Create Myriad node and generate output
+        new MyriadNode(plan, Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), seed).run();
         
-        // create node information object
-        MyriadNode m = new MyriadNode(Integer.parsInt(args[0]), Integer.parsInt(args[1]), Integer.parsInt(args[2]), seed);
-        
-        // read n-gram/grammar/regex input file and create model object
-        LanguageModel l = new LanguageModel(m);
+
         
     }
 
 
-    public class MyriadNode{
-        
-        /*
-        * Node identifier in [0..N-1]
-        */
-        public int nID;
-    
-        /*
-        * Total number of processes.
-        */
-        public int N;
-    
-        /*
-        * Total table size.
-        */
-        public int size;
-        
-        /*
-        * Seed for PRNG.
-        */
-        public int seed;
-        
-        public MyriadNode(int nID, int N, int size, int seed){
-            this.nID = nID;
-            this.N = N;
-            this.size = size;
-            this.seed = seed;
-        }
-        
-    
-    }
+
 
 }

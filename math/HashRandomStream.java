@@ -16,7 +16,7 @@
 * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
 */
 
-public class HashRandomStream extends PRNG {
+public class HashRandomStream extends AbstractPRNG {
 
 
     private long PERIOD;
@@ -25,10 +25,11 @@ public class HashRandomStream extends PRNG {
         super(m);
     }
     
-    private void init(){
+    public void init(){
         // TODO: determine period of hash function below
-        this.PERIOD = 10000000000;
-        super.OFFSET_SUBSTREAM = super.m.nID * this.PERIOD / super.m.N;
+        this.PERIOD = 1000000000;
+        super.OFFSET_SUBSTREAM = super.m.getNodeID() * this.PERIOD / super.m.getNumProcess();
+        super.pos = -1;
     }
     
     // is this code necessary?
@@ -37,7 +38,7 @@ public class HashRandomStream extends PRNG {
     }
     
     // Random hash function from "Numerical Recipes"
-    private long compute(long pos){
+    public long compute(long pos){
         long x = pos;
         x = 3935559000370003845L * x + 2691343689449507681L;
         x = x ^ (x >> 21);
@@ -49,18 +50,13 @@ public class HashRandomStream extends PRNG {
         x = x ^ (x << 5);
         return x;
     }
-    
-    /*
-UInt64 x = _elementS.v[0];
-x = 3935559000370003845LL * x + 2691343689449507681LL;
-x = x ^ (x >> 21);
-x = x ^ (x << 37);
-x = x ^ (x >> 4);
-x = 4768777513237032717LL * x;
-x = x ^ (x << 20);
-x = x ^ (x >> 41);
-x = x ^ (x << 5);
-return x;
-}*/
+
+    public long nextLong(){
+        return compute(super.OFFSET_SUBSTREAM + (++super.pos));
+    }
+
+    public double nextDouble(){
+        return nextLong()/this.PERIOD;
+    }
 
 }

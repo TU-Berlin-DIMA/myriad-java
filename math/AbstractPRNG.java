@@ -18,34 +18,34 @@
 
 import java.util.Random;
 
-public abstract class PRNG{
+public abstract class AbstractPRNG {
 
     /*
     *  Node information object.
     */
-    private MyriadNode m;
+    public MyriadNode m;
     
     /*
     * Very large or maximum value (period) that can be generated.
     */
-    private long OFFSET_SUBSTREAM;
+    public long OFFSET_SUBSTREAM;
     
     /*
     * Position polonger in chunk of current node.
     */
-    private long pos;
+    public long pos;
     
-    public PRNG(MyriadNode m){
+    public AbstractPRNG(MyriadNode m){
         this.m = m;
         this.OFFSET_SUBSTREAM = 0;
         init();
     }
-    
+
     /*
     * Assign chunk and move cursor 'pos' before first element of substream. 
     * Use #MyriadNode.seed and MAX_RAND.
     */
-    private void init();
+    abstract void init();
     
     /* 
     * Return random number in assigned substream at given position. 
@@ -57,6 +57,10 @@ public abstract class PRNG{
     /*
     * Implementation of the random number generation function.
     */
-    private long compute(long pos);
+    abstract long compute(long pos);
+
+    abstract long nextLong();
+
+    abstract double nextDouble();
     
 }

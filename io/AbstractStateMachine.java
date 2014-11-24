@@ -17,6 +17,7 @@
 */
 
 import java.io.*;
+import java.util.*;
 
 /*
  * Abstract class for constructing and running a finite state machine. 
@@ -25,27 +26,42 @@ import java.io.*;
 public abstract class AbstractStateMachine{
     
     /* Pseudorandom number generator instance for transition probabilities */
-    private PRNG prng;
-    
+    private AbstractPRNG prng;
+    // Starting state
+    private State start;
     private double EPS = Double.MIN_VALUE*100;
+    private String output;
 
     public enum State{
         
         private boolean isFinal;
-        private Vector<Transition> trans;
+        private AbstractMap<State, Transition> trans;
+
         
-        public State(Boolean isFinal){
+        State(Boolean isFinal){
             this.isFinal = isFinal;
-            trans = new Map<State, Transition>();
+            trans = new HashMap<State, Transition>();
         }
         
         public class Transition{
-            public Float delta;
+            public Double delta;
             public String output;
-            public Transition(Float delta, String output){
+            public Transition(Double delta, String output){
                 this.delta = delta;
                 this.output = output;
             }
+        }
+
+        public class Traversal<State, String> implements Map.Entry<State, String> {
+            State state;
+            String output;
+            public Traversal(State state, String output){
+                this.state = state;
+                this.output = output;
+            }
+            public State getKey(){ return this.state;}
+            public String getValue() {return this.output;}
+            public String setValue(String value){String old = this.output; this.output = value; return old;}
         }
         
         public class TransitionException extends Exception{
@@ -60,9 +76,17 @@ public abstract class AbstractStateMachine{
         public Boolean getIsFinal(){
             return this.isFinal;
         }
+
+        // Collect transition probs of all outgoing edges
+        public Vector<Double> getValues(){
+            Vector<Double> tmp = new Vector<Double>(trans.size());
+            for (Transition t : trans.values())
+                tmp.add(t.delta);
+            return tmp;
+        }
         
         // add a new transition 
-        public void addTrans(State state, Float delta, String output){
+        public void addTrans(State state, Double delta, String output){
             trans.put(state, new Transition(delta, output));
         }
         
@@ -71,33 +95,36 @@ public abstract class AbstractStateMachine{
             trans.remove(state);
         }
         
-        // traverse w.r.t. transition probabilities
-        public Pair<State, String> traverse(){
-            double p = State.this.prng.nextDouble();
+        // traverse w.r.t. transition probabilities and return new state
+        public Map.Entry<State, String> traverse(){
+            double p = AbstractStateMachine.this.prng.nextDouble();
             double cumSum = 0;
-            
+
             for (Map.Entry<State, Transition> edge : this.trans.entrySet()){
                 cumSum += edge.getValue().delta;
-                if (p <= cumSum)
-                    return new Pair<State, String>(edge.getKey(), edge.getValue().output);
+                if (p <= cumSum) {
+                    return new Traversal<State, String>(edge.getKey(), edge.getValue().output);
+
+                }
             }
             throw new TransitionException("No transition state found!");
         }
     }
     
-    private State start;
-    
+
     /* Constructor */
-    public AbstractStateMachine(String path, MyriadNode m){
+    public AbstractStateMachine(String path, MyriadNode m) throws FileNotFoundException {
         this.start = null;
         initMachine(path);
-        this.prng = new PRNG(m);
+        this.prng = new HashRandomStream(m);
+        this.output = "";
     }
     
     public boolean addStart(State start, Boolean isFinal){
-        if (!this.start != null)
+        if (this.start != null) return false;
         this.start = start;
-        this.isFinal = isFinal;
+        this.start.isFinal = isFinal;
+        return true;
     }
     
     // Return start state
@@ -106,13 +133,13 @@ public abstract class AbstractStateMachine{
     }
     
     // collect all distinct states of machine
-    public Set<State> getStates(){
-        Set<State> S = new Set<State>();
+    public EnumSet<State> getStates(){
+        EnumSet<State> S = EnumSet.of(null);
         if (this.start == null) return S;
-        Queue<State> Q = new Queue<State>();
-        Q.enqueue(this.start);
+        LinkedList<State> Q = new LinkedList<State>();
+        Q.add(this.start);
         while (!Q.isEmpty()){
-            v = Q.poll();
+            State v = Q.poll();
             S.add(v);
             for (State w : v.trans.keySet()){
                 if (!S.contains(w))
@@ -126,18 +153,20 @@ public abstract class AbstractStateMachine{
     public boolean normalizeDelta(){
         Boolean touched = false;
         State curr = this.start;
-        if (this.curr = null) return true;
+        if (curr == null) return true;
         Set<State> states = getStates();
         for (State state : states){
             double deltaCum = 0;
-            for (double delta : state.trans.getValues())
-                deltaCum += delta;
-            if (deltaCum < 1-this.EPS || deltaCum > 1+EPS){
-                for (Map.Entry<State, Transition> succ : state.trans.entrySet()){
-                    trans.put(succ.getKey(), new Transition(succ.getValue().delta/deltaCum, succ.getValue().output));
+            // Todo: use iterator, foreach not possible for AbstracMaps
+            for (Map.Entry<State, State.Transition> succ : state.trans) //double delta : state.trans.getValues())
+                deltaCum += succ.getValue().delta;
+            if (deltaCum < 1 - this.EPS || deltaCum > 1 + EPS) {
+                for (Map.Entry<State, State.Transition> succ : state.trans.entrySet()) {
+                    trans.put(succ.getKey(), new Transition(succ.getValue().delta / deltaCum, succ.getValue().output));
                 }
                 touched = true;
             }
+
         }
         return touched;
     }
@@ -148,11 +177,11 @@ public abstract class AbstractStateMachine{
         
         // check for normalized transition probs
         State curr = this.start;
-        if (this.curr = null) return true;
+        if (curr == null) return true;
         Set<State> states = getStates();
         for (State state : states){
             double deltaCum = 0;
-            for (double delta : state.trans.getValues())
+            for (double delta : state.getValues())
                 deltaCum += delta;
             if (deltaCum < 1-this.EPS || deltaCum > 1+EPS){
                 return false;
@@ -162,12 +191,10 @@ public abstract class AbstractStateMachine{
     }
     
     /* Initialize model from its textual representation */
-    private void initMachine(String path) throws FileNotFoundException;
+    abstract void initMachine(String path) throws FileNotFoundException;
     
 
-    /* Produce output string by PRNG supported graph traversal */
-    public String produce(){
-    
-    }
+    /* Produce output string by AbstractPRNG supported graph traversal */
+    abstract String produce();
 
 }
