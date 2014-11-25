@@ -13,4 +13,6 @@ Questions:
 
 3. Abstract/Make use from distributed environment for a) grammar/regex derivation and b) data (+text) generation
 
-4. Look at Iterable-Like API, yield not appropriate
+4. Yarn to distribute Hadoop-/Flink on cluster
+
+5. Scala: Look at Iterable-Like API, yield not appropriate

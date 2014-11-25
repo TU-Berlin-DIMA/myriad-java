@@ -16,6 +16,8 @@
 * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
 */
 
+import math.HashRandomStream;
+
 import java.io.*;
 import java.util.*;
 
@@ -35,7 +37,7 @@ public abstract class AbstractStateMachine{
     public class State{
         
         private boolean isFinal;
-        private AbstractMap<State, Transition> trans;
+        private HashMap<State, Transition> trans;
 
         
         State(Boolean isFinal){
@@ -134,7 +136,7 @@ public abstract class AbstractStateMachine{
     }
     
     // collect all distinct states of machine
-    public EnumSet<State> getStates(){
+    /*public EnumSet<State> getStates(){
         EnumSet<State> S = EnumSet.of(null);
         if (this.start == null) return S;
         LinkedList<State> Q = new LinkedList<State>();
@@ -148,7 +150,7 @@ public abstract class AbstractStateMachine{
             }
         }
         return S;
-    }
+    }*/
     
     // normalize transition probs
     public boolean normalizeDelta(){
@@ -158,8 +160,8 @@ public abstract class AbstractStateMachine{
         Set<State> states = getStates();
         for (State state : states){
             double deltaCum = 0;
-            // Todo: use iterator, foreach not possible for AbstracMaps
-            for (Map.Entry<State, State.Transition> succ : state.trans) //double delta : state.trans.getValues())
+            // Todo: use iterator, foreach not possible for AbstractMaps
+            for (Map.Entry<State, State.Transition> succ : state.trans.entrySet()) //double delta : state.trans.getValues())
                 deltaCum += succ.getValue().delta;
             if (deltaCum < 1 - this.EPS || deltaCum > 1 + EPS) {
                 for (Map.Entry<State, State.Transition> succ : state.trans.entrySet()) {

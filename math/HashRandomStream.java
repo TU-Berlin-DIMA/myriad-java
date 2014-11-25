@@ -34,7 +34,7 @@ public class HashRandomStream extends AbstractPRNG {
     
     // is this code necessary?
     public long at(long pos){
-        super.at(pos);
+        return super.at(pos);
     }
     
     // Random hash function from "Numerical Recipes"

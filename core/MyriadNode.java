@@ -5,6 +5,11 @@
 public class MyriadNode{
 
     /*
+    * PRNG instance.
+    * */
+    private Generator gen;
+
+    /*
     * Node identifier in [0..N-1]
     */
     private int nID;
@@ -32,6 +37,12 @@ public class MyriadNode{
     }
 
     /*
+    * Copy constructor.
+    * */
+    public MyriadNode(MyriadNode m) {
+        this(m.getGenerator(), m.getNodeID(), m.getNumProcess(), m.getSize(), m.getSeed());
+    }
+    /*
     * Run data generation plan and return
     */
     public boolean run(){
@@ -53,4 +64,15 @@ public class MyriadNode{
         return this.N;
     }
 
+    public Generator getGenerator(){
+        return this.gen;
+    }
+
+    public int getSize(){
+        return this.size;
+    }
+
+    public int getSeed(){
+        return this.seed;
+    }
 }
