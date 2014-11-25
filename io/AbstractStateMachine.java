@@ -32,7 +32,7 @@ public abstract class AbstractStateMachine{
     private double EPS = Double.MIN_VALUE*100;
     private String output;
 
-    public enum State{
+    public class State{
         
         private boolean isFinal;
         private AbstractMap<State, Transition> trans;
@@ -107,7 +107,8 @@ public abstract class AbstractStateMachine{
 
                 }
             }
-            throw new TransitionException("No transition state found!");
+
+            //throw new TransitionException("No transition state found!");
         }
     }
     

@@ -9,7 +9,7 @@ Questions:
         - Express grammar generation rules as Scala program
         - Create model for text generation based on regex, i.e. assign transition probabilities
 
-   ii) Or Adapter
+   ii) Or Adapter/Parser
 
 3. Abstract/Make use from distributed environment for a) grammar/regex derivation and b) data (+text) generation
 
