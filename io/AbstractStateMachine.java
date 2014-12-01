@@ -94,23 +94,19 @@ public abstract class AbstractStateMachine{
         
         // remove successor state non-recursively, i.e. children will rest in automaton
         public boolean remTrans(State state){
-            trans.remove(state);
+            return null != trans.remove(state);
         }
         
         // traverse w.r.t. transition probabilities and return new state
-        public Map.Entry<State, String> traverse(){
+        public Map.Entry<State, String> traverse() throws TransitionException{
             double p = AbstractStateMachine.this.prng.nextDouble();
             double cumSum = 0;
-
             for (Map.Entry<State, Transition> edge : this.trans.entrySet()){
                 cumSum += edge.getValue().delta;
-                if (p <= cumSum) {
+                if (p <= cumSum)
                     return new Traversal<State, String>(edge.getKey(), edge.getValue().output);
-
-                }
             }
-
-            //throw new TransitionException("No transition state found!");
+            throw new TransitionException("No transition state found!");
         }
     }
     
@@ -165,20 +161,16 @@ public abstract class AbstractStateMachine{
                 deltaCum += succ.getValue().delta;
             if (deltaCum < 1 - this.EPS || deltaCum > 1 + EPS) {
                 for (Map.Entry<State, State.Transition> succ : state.trans.entrySet()) {
-                    state.trans.put(succ.getKey(), new state.Transition(succ.getValue().delta / deltaCum, succ.getValue().output));
+                    state.trans.put(succ.getKey(), state.new Transition(succ.getValue().delta / deltaCum, succ.getValue().output));
                 }
                 touched = true;
             }
-
         }
         return touched;
     }
         
-    // check for sanity: state duplicates, normalized transition probs
+    // check for sanity: normalized transition probs
     public boolean checkSanity(){
-        // TODO: check for duplicates pred(A) != pred(A') => duplicated enum State
-        
-        // check for normalized transition probs
         State curr = this.start;
         if (curr == null) return true;
         Set<State> states = getStates();
@@ -186,11 +178,10 @@ public abstract class AbstractStateMachine{
             double deltaCum = 0;
             for (double delta : state.getValues())
                 deltaCum += delta;
-            if (deltaCum < 1-this.EPS || deltaCum > 1+EPS){
+            if (deltaCum < 1-this.EPS || deltaCum > 1+EPS)
                 return false;
-            }
         }
-    
+        return true;
     }
     
     /* Initialize model from its textual representation */
