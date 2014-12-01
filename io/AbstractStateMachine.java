@@ -16,7 +16,7 @@
 * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
 */
 
-import math.HashRandomStream;
+//import HashRandomStream;
 
 import java.io.*;
 import java.util.*;
@@ -136,8 +136,8 @@ public abstract class AbstractStateMachine{
     }
     
     // collect all distinct states of machine
-    /*public EnumSet<State> getStates(){
-        EnumSet<State> S = EnumSet.of(null);
+    public HashSet<State> getStates(){
+        HashSet<State> S = new HashSet<State>();
         if (this.start == null) return S;
         LinkedList<State> Q = new LinkedList<State>();
         Q.add(this.start);
@@ -150,7 +150,7 @@ public abstract class AbstractStateMachine{
             }
         }
         return S;
-    }*/
+    }
     
     // normalize transition probs
     public boolean normalizeDelta(){
@@ -165,7 +165,7 @@ public abstract class AbstractStateMachine{
                 deltaCum += succ.getValue().delta;
             if (deltaCum < 1 - this.EPS || deltaCum > 1 + EPS) {
                 for (Map.Entry<State, State.Transition> succ : state.trans.entrySet()) {
-                    trans.put(succ.getKey(), new Transition(succ.getValue().delta / deltaCum, succ.getValue().output));
+                    state.trans.put(succ.getKey(), new state.Transition(succ.getValue().delta / deltaCum, succ.getValue().output));
                 }
                 touched = true;
             }
