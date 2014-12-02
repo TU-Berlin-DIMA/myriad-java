@@ -63,6 +63,6 @@ public abstract class AbstractPRNG {
 
     abstract long nextLong();
 
-    abstract double nextDouble();
+    public abstract double nextDouble();
 
 }
