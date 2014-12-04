@@ -15,34 +15,29 @@
  *
  * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
  */
-
 package math;
 
 import core.MyriadNode;
 
 public class HashRandomStream extends AbstractPRNG {
 
-    private long PERIOD;
-
     public HashRandomStream(MyriadNode m) {
         super(m);
     }
 
     public void init() {
-        // TODO: determine period of hash function below
-        this.PERIOD = 1000000000;
-        super.OFFSET_SUBSTREAM = super.m.getNodeID() * this.PERIOD / super.m.getNumProcess();
+        super.OFFSET_SUBSTREAM = super.m.getNodeID() * (Long.MAX_VALUE/ super.m.getNumProcess());
         super.pos = -1;
     }
 
-    // is this code necessary?
+    @Override
     public long at(long pos) {
-        return super.at(pos);
+        return prng(pos + super.OFFSET_SUBSTREAM);
     }
 
     // Random hash function from "Numerical Recipes"
-    public long compute(long pos) {
-        long x = pos;
+    public long prng(long u) {
+        long x = u;
         x = 3935559000370003845L * x + 2691343689449507681L;
         x = x ^ (x >> 21);
         x = x ^ (x << 37);
@@ -55,11 +50,14 @@ public class HashRandomStream extends AbstractPRNG {
     }
 
     public long nextLong() {
-        return compute(super.OFFSET_SUBSTREAM + (++super.pos));
+        return prng(super.OFFSET_SUBSTREAM + (++super.pos));
     }
 
-    public double nextDouble() {
-        return nextLong() / this.PERIOD;
+    public int nextInt() {
+        return (int) (nextLong() & 0xffffffff);
     }
 
+    public double nextDouble(){
+        return 5.42101086242752217E-20 * nextLong();
+    }
 }
