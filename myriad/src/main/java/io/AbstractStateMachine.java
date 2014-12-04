@@ -16,9 +16,9 @@
  * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
  */
 
-package io;
-
 //import HashRandomStream;
+
+package io;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -28,8 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import math.AbstractPRNG;
-import math.HashRandomStream;
+import math.*;
 import core.MyriadNode;
 
 /*
