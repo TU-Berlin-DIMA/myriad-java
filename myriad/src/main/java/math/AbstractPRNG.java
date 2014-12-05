@@ -37,17 +37,14 @@ public abstract class AbstractPRNG {
      */
     public long pos;
 
+    public AbstractPRNG(){}
+
     public AbstractPRNG(MyriadNode m) {
         this.m = m;
         this.OFFSET_SUBSTREAM = 0;
-        init();
+        this.pos = -1;
     }
 
-    /*
-     * Assign chunk and move cursor 'pos' before first element of substream. Use
-     * #MyriadNode.seed and MAX_RAND. Transfer PRNG into initial state if necessary.
-     */
-    public abstract void init();
 
     /*
      * Return random number in assigned substream at given position.

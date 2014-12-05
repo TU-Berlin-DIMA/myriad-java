@@ -22,21 +22,25 @@ import core.MyriadNode;
 public class HashRandomStream extends AbstractPRNG {
 
     public HashRandomStream(MyriadNode m) {
+
         super(m);
+        super.OFFSET_SUBSTREAM = super.m.getNodeID() * (Long.MAX_VALUE/ super.m.getNumProcess());
+        super.pos = -1;
     }
 
-    public void init() {
-        super.OFFSET_SUBSTREAM = super.m.getNodeID() * (Long.MAX_VALUE/ super.m.getNumProcess());
+    // Select initial starting position based on hashed seed
+    public HashRandomStream(long seed){
+        super.OFFSET_SUBSTREAM = this.hash(seed);
         super.pos = -1;
     }
 
     @Override
     public long at(long pos) {
-        return prng(pos + super.OFFSET_SUBSTREAM);
+        return hash(pos + super.OFFSET_SUBSTREAM);
     }
 
-    // Random hash function from "Numerical Recipes"
-    public long prng(long u) {
+    // Hash function for high-quality random numbers taken from "Numerical Recipes" (Press, Teukolsky, Vetterling)
+    private long hash(long u) {
         long x = u;
         x = 3935559000370003845L * x + 2691343689449507681L;
         x = x ^ (x >> 21);
@@ -50,7 +54,7 @@ public class HashRandomStream extends AbstractPRNG {
     }
 
     public long nextLong() {
-        return prng(super.OFFSET_SUBSTREAM + (++super.pos));
+        return hash(super.OFFSET_SUBSTREAM + (++super.pos));
     }
 
     public int nextInt() {
