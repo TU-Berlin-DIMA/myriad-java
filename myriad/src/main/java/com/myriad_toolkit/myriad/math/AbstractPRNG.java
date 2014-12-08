@@ -33,36 +33,38 @@ public abstract class AbstractPRNG {
     public long OFFSET_SUBSTREAM;
 
     /*
-     * Position polonger in chunk of current node.
+     * Position in chunk of current node.
      */
     public long pos;
+
+    public AbstractPRNG(){}
 
     public AbstractPRNG(MyriadNode m) {
         this.m = m;
         this.OFFSET_SUBSTREAM = 0;
-        init();
+        this.pos = -1;
     }
 
-    /*
-     * Assign chunk and move cursor 'pos' before first element of substream. Use
-     * #MyriadNode.seed and MAX_RAND.
-     */
-    abstract void init();
 
     /*
      * Return random number in assigned substream at given position.
      */
-    public long at(long pos) {
-        return compute(pos + OFFSET_SUBSTREAM);
-    }
+    public abstract long at(long pos);
 
     /*
-     * Implementation of the random number generation function.
+     * Return next random number as 64 bit integer.
      */
-    abstract long compute(long pos);
+    public abstract long nextLong();
 
-    abstract long nextLong();
+    /*
+    * Return next random number as 32 bit integer.
+     */
+    public abstract int nextInt();
 
+    /*
+     * Returns hash of u as a double-precision floating value between 0. and 1.
+     * */
     public abstract double nextDouble();
+
 
 }
