@@ -1,4 +1,4 @@
-package math;
+package com.myriad_toolkit.myriad.math;
 
 import java.io.*;
 import java.util.*;
@@ -7,7 +7,7 @@ import java.util.*;
  * <h3>MersenneTwister and MersenneTwisterFast</h3>
  * <p><b>Version 20</b>, based on version MT199937(99/10/29)
  * of the Mersenne Twister algorithm found at 
- * <a href="http://www.math.keio.ac.jp/matumoto/emt.html">
+ * <a href="http://www.com.myriad_toolkit.myriad.math.keio.ac.jp/matumoto/emt.html">
  * The Mersenne Twister Home Page</a>, with the initialization
  * improved using the new 2002/1/26 initialization algorithm
  * By Sean Luke, October 2004.
@@ -30,7 +30,7 @@ import java.util.*;
  * <h3>About the Mersenne Twister</h3>
  * <p>This is a Java version of the C-program for MT19937: Integer version.
  * The MT19937 algorithm was created by Makoto Matsumoto and Takuji Nishimura,
- * who ask: "When you use this, send an email to: matumoto@math.keio.ac.jp
+ * who ask: "When you use this, send an email to: matumoto@com.myriad_toolkit.myriad.math.keio.ac.jp
  * with an appropriate reference to your work".  Indicate that this
  * is a translation of their algorithm into Java.
  *
@@ -106,8 +106,8 @@ import java.util.*;
  * milliseconds.
  *
  * <p><b>Changes Since V4:</b> New initialization algorithms.  See
- * (see <a href="http://www.math.keio.ac.jp/matumoto/MT2002/emt19937ar.html"</a>
- * http://www.math.keio.ac.jp/matumoto/MT2002/emt19937ar.html</a>)
+ * (see <a href="http://www.com.myriad_toolkit.myriad.math.keio.ac.jp/matumoto/MT2002/emt19937ar.html"</a>
+ * http://www.com.myriad_toolkit.myriad.math.keio.ac.jp/matumoto/MT2002/emt19937ar.html</a>)
  *
  * <p>The MersenneTwister code is based on standard MT19937 C/C++ 
  * code by Takuji Nishimura,
@@ -1244,7 +1244,7 @@ public strictfp class MersenneTwisterFast implements Serializable, Cloneable
         MersenneTwisterFast r;
 
         // CORRECTNESS TEST
-        // COMPARE WITH http://www.math.keio.ac.jp/matumoto/CODES/MT2002/mt19937ar.out
+        // COMPARE WITH http://www.com.myriad_toolkit.myriad.math.keio.ac.jp/matumoto/CODES/MT2002/mt19937ar.out
         
         r = new MersenneTwisterFast(new int[]{0x123, 0x234, 0x345, 0x456});
         System.out.println("Output of MersenneTwisterFast with new (2002/1/26) seeding mechanism");

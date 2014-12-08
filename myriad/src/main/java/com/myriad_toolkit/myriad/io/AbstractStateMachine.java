@@ -16,7 +16,7 @@
  * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
  */
 
-package io;
+package com.myriad_toolkit.myriad.io;
 
 //import HashRandomStream;
 
@@ -28,9 +28,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import math.AbstractPRNG;
-import math.HashRandomStream;
-import core.MyriadNode;
+import com.myriad_toolkit.myriad.math.AbstractPRNG;
+import com.myriad_toolkit.myriad.math.HashRandomStream;
+import com.myriad_toolkit.myriad.core.MyriadNode;
 
 /*
  * Abstract class for constructing and running a finite state machine. 

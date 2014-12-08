@@ -2,7 +2,7 @@
  * Created by Lyssa on 24/11/14.
  */
 
-package core;
+package com.myriad_toolkit.myriad.core;
 
 public class MyriadNode {
 

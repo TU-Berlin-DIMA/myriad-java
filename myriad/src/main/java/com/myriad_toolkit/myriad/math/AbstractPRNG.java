@@ -16,9 +16,9 @@
  * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
  */
 
-package math;
+package com.myriad_toolkit.myriad.math;
 
-import core.MyriadNode;
+import com.myriad_toolkit.myriad.core.MyriadNode;
 
 public abstract class AbstractPRNG {
 

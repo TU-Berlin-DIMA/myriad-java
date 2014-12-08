@@ -16,7 +16,7 @@
  * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
  */
 
-package core;
+package com.myriad_toolkit.myriad.core;
 
 import java.io.FileNotFoundException;
 import java.util.Random;

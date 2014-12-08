@@ -1,4 +1,4 @@
-package core;
+package com.myriad_toolkit.myriad.core;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
