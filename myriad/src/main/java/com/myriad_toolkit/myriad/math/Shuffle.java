@@ -16,7 +16,7 @@
  * @author: Marie Hoffmann <marie.hoffmann@tu-berlin.de>
  */
 
-package math;
+package com.myriad_toolkit.myriad.math;
 
 /**
  *  This class implements a splittable shuffle with O(1) space and O(n) computational costs inspired by Rendezvous hashing.
